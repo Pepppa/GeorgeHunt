@@ -9,10 +9,15 @@ import android.view.View;
 import android.view.MotionEvent;
 import android.os.Vibrator;
 import android.content.Context;
+import android.media.AudioAttributes;
+import android.media.SoundPool;
+import android.media.AudioManager;
 
 public class GameView extends View {
 
     private Vibrator vibrator;
+    private SoundPool soundPool;
+    private int catchSound;
 
     private Paint paint;
     private float ballX = 200;
@@ -23,6 +28,7 @@ public class GameView extends View {
     private float speedY = 5;
     private float shakeX = 0;
     private float shakeY = 0;
+    private int soundStreamId = 0;
 
     private boolean isPaused = false;
     private boolean isCaught = false;
@@ -41,6 +47,18 @@ public class GameView extends View {
         super(context);
         paint = new Paint();
         vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+
+        AudioAttributes attrs = new AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_GAME)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .build();
+        soundPool = new SoundPool.Builder()
+                .setMaxStreams(1)
+                .setAudioAttributes(attrs)
+                .build();
+
+        catchSound = soundPool.load(context, R.raw.soundfile, 1);
+
         handler.post(gameLoop); // start the loop
     }
 
@@ -54,6 +72,7 @@ public class GameView extends View {
                 if (distance < ballRadius) {
                     isPaused = true;
                     isCaught = true;
+                    soundStreamId = soundPool.play(catchSound, 1, 1, 0, 0, 1);
                     long[] pattern = {0, 100, 100}; // пауза, вибрация, пауза
                     vibrator.vibrate(pattern, 0); // 0 = повторять с начала
                 }
@@ -62,6 +81,8 @@ public class GameView extends View {
             case MotionEvent.ACTION_UP:
                 isPaused = false;
                 isCaught = false;
+                soundPool.stop(soundStreamId); // останавливаем звук
+                soundStreamId = 0;
                 vibrator.cancel();
                 break;
         }
