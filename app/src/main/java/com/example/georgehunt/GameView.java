@@ -7,8 +7,12 @@ import android.graphics.Paint;
 import android.os.Handler;
 import android.view.View;
 import android.view.MotionEvent;
+import android.os.Vibrator;
+import android.content.Context;
 
 public class GameView extends View {
+
+    private Vibrator vibrator;
 
     private Paint paint;
     private float ballX = 200;
@@ -36,6 +40,7 @@ public class GameView extends View {
     public GameView(Context context) {
         super(context);
         paint = new Paint();
+        vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         handler.post(gameLoop); // start the loop
     }
 
@@ -49,12 +54,15 @@ public class GameView extends View {
                 if (distance < ballRadius) {
                     isPaused = true;
                     isCaught = true;
+                    long[] pattern = {0, 100, 100}; // пауза, вибрация, пауза
+                    vibrator.vibrate(pattern, 0); // 0 = повторять с начала
                 }
                 break;
 
             case MotionEvent.ACTION_UP:
                 isPaused = false;
                 isCaught = false;
+                vibrator.cancel();
                 break;
         }
         return true;
