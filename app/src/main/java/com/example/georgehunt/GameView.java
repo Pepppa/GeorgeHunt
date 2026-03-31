@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Handler;
 import android.view.View;
+import android.view.MotionEvent;
 
 public class GameView extends View {
 
@@ -16,6 +17,11 @@ public class GameView extends View {
 
     private float speedX = 5;
     private float speedY = 5;
+    private float shakeX = 0;
+    private float shakeY = 0;
+
+    private boolean isPaused = false;
+    private boolean isCaught = false;
 
     private Handler handler = new Handler();
     private Runnable gameLoop = new Runnable() {
@@ -33,19 +39,47 @@ public class GameView extends View {
         handler.post(gameLoop); // start the loop
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                float dx = event.getX() - ballX;
+                float dy = event.getY() - ballY;
+                float distance = (float) Math.sqrt(dx * dx + dy * dy);
+                if (distance < ballRadius) {
+                    isPaused = true;
+                    isCaught = true;
+                }
+                break;
+
+            case MotionEvent.ACTION_UP:
+                isPaused = false;
+                isCaught = false;
+                break;
+        }
+        return true;
+    }
+
     private void update() {
-        ballX += speedX;
-        ballY += speedY;
+            if (isPaused) {
+                // Small random shake while caught
+                shakeX = (float) (Math.random() * 6 - 3);
+                shakeY = (float) (Math.random() * 6 - 3);
+                return;
+            }
 
-        // Bounce off left/right walls
-        if (ballX - ballRadius < 0 || ballX + ballRadius > getWidth()) {
-            speedX = -speedX;
-        }
+            shakeX = 0;
+            shakeY = 0;
 
-        // Bounce off top/bottom walls
-        if (ballY - ballRadius < 0 || ballY + ballRadius > getHeight()) {
-            speedY = -speedY;
-        }
+            ballX += speedX;
+            ballY += speedY;
+
+            if (ballX - ballRadius < 0 || ballX + ballRadius > getWidth()) {
+                speedX = -speedX;
+            }
+            if (ballY - ballRadius < 0 || ballY + ballRadius > getHeight()) {
+                speedY = -speedY;
+            }
     }
 
     @Override
@@ -54,7 +88,7 @@ public class GameView extends View {
 
         canvas.drawColor(Color.parseColor("#1a237e"));
 
-        paint.setColor(Color.YELLOW);
-        canvas.drawCircle(ballX, ballY, ballRadius, paint);
+        paint.setColor(isCaught ? Color.RED : Color.YELLOW);
+        canvas.drawCircle(ballX + shakeX, ballY + shakeY, ballRadius, paint);
     }
 }
