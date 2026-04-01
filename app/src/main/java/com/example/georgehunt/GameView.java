@@ -64,26 +64,60 @@ public class GameView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        switch (event.getAction()) {
+        int action = event.getActionMasked();
+
+        switch (action) {
             case MotionEvent.ACTION_DOWN:
-                float dx = event.getX() - ballX;
-                float dy = event.getY() - ballY;
-                float distance = (float) Math.sqrt(dx * dx + dy * dy);
-                if (distance < ballRadius) {
+            case MotionEvent.ACTION_POINTER_DOWN:
+            case MotionEvent.ACTION_MOVE:
+                // Проверяем все пальцы - достаточно хотя бы одного в периметре
+                boolean anyFingerOnBall = false;
+                for (int i = 0; i < event.getPointerCount(); i++) {
+                    float dx = event.getX(i) - ballX;
+                    float dy = event.getY(i) - ballY;
+                    float distance = (float) Math.sqrt(dx * dx + dy * dy);
+                    if (distance < ballRadius) {
+                        anyFingerOnBall = true;
+                        break;
+                    }
+                }
+                if (anyFingerOnBall && !isCaught) {
                     isPaused = true;
                     isCaught = true;
                     soundStreamId = soundPool.play(catchSound, 1, 1, 0, 0, 1);
-                    long[] pattern = {0, 100, 100}; // пауза, вибрация, пауза
-                    vibrator.vibrate(pattern, 0); // 0 = повторять с начала
+                    long[] pattern = {0, 100, 100};
+                    vibrator.vibrate(pattern, 0);
+                } else if (!anyFingerOnBall && isCaught) {
+                    isPaused = false;
+                    isCaught = false;
+                    soundPool.stop(soundStreamId);
+                    soundStreamId = 0;
+                    vibrator.cancel();
                 }
                 break;
 
             case MotionEvent.ACTION_UP:
-                isPaused = false;
-                isCaught = false;
-                soundPool.stop(soundStreamId); // останавливаем звук
-                soundStreamId = 0;
-                vibrator.cancel();
+            case MotionEvent.ACTION_POINTER_UP:
+                // Проверяем оставшиеся пальцы после отрыва
+                int releasedIndex = event.getActionIndex();
+                boolean stillOnBall = false;
+                for (int i = 0; i < event.getPointerCount(); i++) {
+                    if (i == releasedIndex) continue; // пропускаем оторвавшийся палец
+                    float dx = event.getX(i) - ballX;
+                    float dy = event.getY(i) - ballY;
+                    float distance = (float) Math.sqrt(dx * dx + dy * dy);
+                    if (distance < ballRadius) {
+                        stillOnBall = true;
+                        break;
+                    }
+                }
+                if (!stillOnBall && isCaught) {
+                    isPaused = false;
+                    isCaught = false;
+                    soundPool.stop(soundStreamId);
+                    soundStreamId = 0;
+                    vibrator.cancel();
+                }
                 break;
         }
         return true;
