@@ -16,6 +16,14 @@
         android:layout_marginBottom="24dp"/>
 
     <Button
+        android:id="@+id/btnSettings"
+        android:layout_width="200dp"
+        android:layout_height="60dp"
+        android:text="Settings"
+        android:textSize="20sp"
+        android:layout_marginBottom="24dp"/>
+
+    <Button
         android:id="@+id/btnExit"
         android:layout_width="200dp"
         android:layout_height="60dp"

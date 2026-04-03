@@ -13,12 +13,14 @@ public class MenuActivity extends AppCompatActivity {
         setContentView(R.layout.activity_menu);
 
         Button btnGame = findViewById(R.id.btnGame);
+        Button btnSettings = findViewById(R.id.btnSettings);
         Button btnExit = findViewById(R.id.btnExit);
 
-        btnGame.setOnClickListener(v -> {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-        });
+        btnGame.setOnClickListener(v ->
+                startActivity(new Intent(this, MainActivity.class)));
+
+        btnSettings.setOnClickListener(v ->
+                startActivity(new Intent(this, SettingsActivity.class)));
 
         btnExit.setOnClickListener(v -> finishAffinity());
     }

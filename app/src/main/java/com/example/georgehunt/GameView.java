@@ -19,6 +19,7 @@ public class GameView extends View {
     private SoundPool soundPool;
     private int catchSound;
     private UnlockListener unlockListener;
+    private Context appContext;
 
     private Paint paint;
     private float ballX = 200;
@@ -69,7 +70,27 @@ public class GameView extends View {
 
         catchSound = soundPool.load(context, R.raw.soundfile, 1);
 
+        // Загрузить настройки — размер мяча применится в onSizeChanged,
+        // скорость применяем сразу
+        float speed = GameSettings.toSpeed(GameSettings.loadSpeedProgress(context));
+        speedX = speed;
+        speedY = speed;
+
+        // Сохраняем context для использования в onSizeChanged
+        this.appContext = context;
+
         handler.post(gameLoop);
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        float screenMin = Math.min(w, h);
+        int radiusProgress = GameSettings.loadRadiusProgress(appContext);
+        ballRadius = GameSettings.toRadius(radiusProgress, screenMin);
+        // Начальная позиция — по центру
+        ballX = w / 2f;
+        ballY = h / 2f;
     }
 
     @Override
