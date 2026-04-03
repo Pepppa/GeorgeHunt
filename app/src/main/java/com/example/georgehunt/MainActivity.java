@@ -15,8 +15,13 @@ public class MainActivity extends AppCompatActivity implements UnlockListener {
     }
 
     @Override
+    public void onBackPressed() {
+        // back button blocked
+    }
+
+    @Override
     public void onUnlock() {
         stopLockTask();
-        finish(); // возврат в MenuActivity
+        finish();
     }
 }
