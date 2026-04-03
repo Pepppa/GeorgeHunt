@@ -283,6 +283,6 @@ public class GameView extends View {
         paint.setColor(Color.WHITE);
         paint.setTextSize(32f);
         paint.setTextAlign(Paint.Align.LEFT);
-        canvas.drawText("slide to unlock →", left + SLIDER_SIZE + 10, SLIDER_SIZE * 0.65f, paint);
+        canvas.drawText("slide to finish the game →", left + SLIDER_SIZE + 10, SLIDER_SIZE * 0.65f, paint);
     }
 }
