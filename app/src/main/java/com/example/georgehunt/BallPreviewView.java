@@ -10,7 +10,7 @@ import android.view.View;
 public class BallPreviewView extends View {
 
     private Paint paint;
-    private float radiusFraction = 0.5f; // 0.0 .. 1.0
+    private int radiusProgress = 50;
 
     public BallPreviewView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -19,16 +19,20 @@ public class BallPreviewView extends View {
         paint.setColor(Color.YELLOW);
     }
 
-    public void setRadiusFraction(float fraction) {
-        this.radiusFraction = fraction;
+    public void setRadiusProgress(int progress) {
+        this.radiusProgress = progress;
         invalidate();
+    }
+
+    public float getCurrentRadius() {
+        float screenMin = Math.min(getWidth(), getHeight());
+        return GameSettings.toRadius(radiusProgress, screenMin);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        float maxRadius = Math.min(getWidth(), getHeight()) / 2f;
-        float radius = maxRadius * radiusFraction;
+        float radius = getCurrentRadius();
         canvas.drawCircle(getWidth() / 2f, getHeight() / 2f, radius, paint);
     }
 }

@@ -26,6 +26,15 @@
             android:layout_height="wrap_content"
             android:max="100"
             android:progress="50"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView
+            android:id="@+id/tvSizeLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="— px"
+            android:textColor="#AAAAFF"
+            android:textSize="16sp"
             android:layout_marginBottom="16dp"/>
 
         <!-- Preview circle -->

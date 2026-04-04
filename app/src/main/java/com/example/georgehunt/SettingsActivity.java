@@ -12,6 +12,7 @@ public class SettingsActivity extends AppCompatActivity {
     private SeekBar seekBarSize;
     private SeekBar seekBarSpeed;
     private TextView tvSpeedLabel;
+    private TextView tvSizeLabel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,20 +23,23 @@ public class SettingsActivity extends AppCompatActivity {
         seekBarSize = findViewById(R.id.seekBarSize);
         seekBarSpeed = findViewById(R.id.seekBarSpeed);
         tvSpeedLabel = findViewById(R.id.tvSpeedLabel);
+        tvSizeLabel = findViewById(R.id.tvSizeLabel);
         Button btnSave = findViewById(R.id.btnSave);
 
-        // Загрузить сохранённые значения
         seekBarSize.setProgress(GameSettings.loadRadiusProgress(this));
         seekBarSpeed.setProgress(GameSettings.loadSpeedProgress(this));
 
-        // Инициализировать превью и лейбл
-        ballPreview.setRadiusFraction(seekBarSize.getProgress() / 100f);
+        ballPreview.setRadiusProgress(seekBarSize.getProgress());
         tvSpeedLabel.setText(GameSettings.speedLabel(seekBarSpeed.getProgress()));
+
+        // Размер в пикселях можно узнать только после layout
+        ballPreview.post(() -> updateSizeLabel(seekBarSize.getProgress()));
 
         seekBarSize.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                ballPreview.setRadiusFraction(progress / 100f);
+                ballPreview.setRadiusProgress(progress);
+                updateSizeLabel(progress);
             }
             @Override public void onStartTrackingTouch(SeekBar seekBar) {}
             @Override public void onStopTrackingTouch(SeekBar seekBar) {}
@@ -54,5 +58,10 @@ public class SettingsActivity extends AppCompatActivity {
             GameSettings.save(this, seekBarSize.getProgress(), seekBarSpeed.getProgress());
             finish();
         });
+    }
+
+    private void updateSizeLabel(int progress) {
+        int px = Math.round(ballPreview.getCurrentRadius());
+        tvSizeLabel.setText(px + " px");
     }
 }
