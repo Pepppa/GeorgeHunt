@@ -258,9 +258,7 @@ public class GameView extends View {
         canvas.drawColor(Color.parseColor("#1a237e"));
 
         // Draw ball
-        paint.setStyle(Paint.Style.FILL);
-        paint.setColor(isCaught ? Color.RED : Color.YELLOW);
-        canvas.drawCircle(ballX + shakeX, ballY + shakeY, ballRadius, paint);
+        BallDrawer.draw(canvas, paint, ballX + shakeX, ballY + shakeY, ballRadius, isCaught);
 
         // Draw lock slider
         drawLockSlider(canvas);

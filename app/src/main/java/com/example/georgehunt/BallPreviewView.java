@@ -39,6 +39,6 @@ public class BallPreviewView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        canvas.drawCircle(getWidth() / 2f, getHeight() / 2f, realRadius, paint);
+        BallDrawer.draw(canvas, paint, getWidth() / 2f, getHeight() / 2f, realRadius, false);
     }
 }
