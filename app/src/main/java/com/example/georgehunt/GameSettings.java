@@ -2,6 +2,8 @@ package com.example.georgehunt;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
 
 public class GameSettings {
 
@@ -30,10 +32,18 @@ public class GameSettings {
                 .getInt(KEY_SPEED, DEFAULT_SPEED_PROGRESS);
     }
 
-    // Конвертация progress (0..100) в радиус в пикселях
-    public static float toRadius(int progress, float screenMin) {
+    public static float maxRadius(Context context) {
+        float dp100 = TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP, 100f,
+                context.getResources().getDisplayMetrics());
+        return dp100;
+    }
+
+    public static float toRadius(int progress, Context context) {
+        DisplayMetrics dm = context.getResources().getDisplayMetrics();
+        float screenMin = Math.min(dm.widthPixels, dm.heightPixels);
         float minRadius = screenMin * 0.05f;
-        float maxRadius = screenMin * 0.45f;
+        float maxRadius = maxRadius(context);
         return minRadius + (maxRadius - minRadius) * (progress / 100f);
     }
 

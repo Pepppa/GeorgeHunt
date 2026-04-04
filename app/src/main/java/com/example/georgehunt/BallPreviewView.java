@@ -33,9 +33,7 @@ public class BallPreviewView extends View {
     }
 
     private void updateRealRadius(Context context) {
-        DisplayMetrics dm = context.getResources().getDisplayMetrics();
-        float screenMin = Math.min(dm.widthPixels, dm.heightPixels);
-        realRadius = GameSettings.toRadius(radiusProgress, screenMin);
+        realRadius = GameSettings.toRadius(radiusProgress, context);
     }
 
     @Override

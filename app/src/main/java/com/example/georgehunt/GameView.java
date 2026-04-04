@@ -85,10 +85,8 @@ public class GameView extends View {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        float screenMin = Math.min(w, h);
-        int radiusProgress = GameSettings.loadRadiusProgress(appContext);
-        ballRadius = GameSettings.toRadius(radiusProgress, screenMin);
-        // Начальная позиция — по центру
+        ballRadius = GameSettings.toRadius(
+                GameSettings.loadRadiusProgress(appContext), appContext);
         ballX = w / 2f;
         ballY = h / 2f;
     }
