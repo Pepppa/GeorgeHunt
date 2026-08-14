@@ -7,8 +7,16 @@
     android:gravity="center"
     android:background="#1a237e">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Settings for which game?"
+        android:textColor="#FFFFFF"
+        android:textSize="22sp"
+        android:layout_marginBottom="40dp"/>
+
     <Button
-        android:id="@+id/btnKolobok"
+        android:id="@+id/btnSettingsKolobok"
         android:layout_width="200dp"
         android:layout_height="60dp"
         android:text="Kolobok"
@@ -16,26 +24,18 @@
         android:layout_marginBottom="24dp"/>
 
     <Button
-        android:id="@+id/btnCatcher"
+        android:id="@+id/btnSettingsCatcher"
         android:layout_width="200dp"
         android:layout_height="60dp"
         android:text="CATcher"
-        android:textSize="20sp"
-        android:layout_marginBottom="24dp"/>
-
-    <Button
-        android:id="@+id/btnSettings"
-        android:layout_width="200dp"
-        android:layout_height="60dp"
-        android:text="Settings"
-        android:textSize="20sp"
-        android:layout_marginBottom="24dp"/>
-
-    <Button
-        android:id="@+id/btnExit"
-        android:layout_width="200dp"
-        android:layout_height="60dp"
-        android:text="Exit"
         android:textSize="20sp"/>
+
+    <Button
+        android:id="@+id/btnBack"
+        android:layout_width="200dp"
+        android:layout_height="60dp"
+        android:text="Back"
+        android:textSize="20sp"
+        android:layout_marginTop="24dp"/>
 
 </LinearLayout>

@@ -31,6 +31,18 @@
             android:name=".SettingsActivity"
             android:exported="false"/>
 
+        <activity
+            android:name=".CatcherActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".SettingsMenuActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".CatcherSettingsActivity"
+            android:exported="false"/>
+
     </application>
 
 </manifest>
